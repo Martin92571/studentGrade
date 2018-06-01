@@ -40,10 +40,15 @@ addClickHandlersToElements();
 *     
 */
 function addClickHandlersToElements(){
-    
-      $("#add").on("click",handleAddClicked);
 
-      $("#cancel").on("click",handleCancelClick);
+      document.getElementById("add").addEventListener("click",handleAddClicked);
+      document.getElementById("cancel").addEventListener("click",handleCancelClick);
+      document.getElementById("server").addEventListener("click",function(){
+            serverCall("serverCall");
+      });
+
+      
+      // $("#server").on("click" ,{crud:"serverCall"} ,serverCall);
 }
 
 /***************************************************************************************************
@@ -53,11 +58,12 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(event){
-
-      var studentName=$("#studentName").val();
-      var course =$("#course").val();
-      var studentGrade=$("#studentGrade").val();
-      addStudent(studentName,course,studentGrade);
+   
+      var studentName= document.getElementById("studentName").value;
+      var course =document.getElementById("course").value;
+      var studentGrade=parseFloat(document.getElementById("studentGrade").value);
+      var createStudent=true;
+      addStudent(studentName,course,studentGrade,null,createStudent);
 
 }
 /***************************************************************************************************
@@ -75,11 +81,16 @@ function handleCancelClick(){
  * @return undefined
  * @calls clearAddStudentFormInputs, updateStudentList
  */
-function addStudent(studentName,courseType,studentGrade){
-
-    var student ={ name: studentName, course: courseType, grade: studentGrade };
-    console.log(student);
+function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
+    
+    var student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
+    
+    var crud={crudName:"createStudent",newstudent:student};
     student_array.push(student);
+    
+    if(createStudent){
+      serverCall(crud);
+    }
     updateStudentList(student);
     clearAddStudentFormInputs();
 }
@@ -87,9 +98,9 @@ function addStudent(studentName,courseType,studentGrade){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-      var studentName=$("#studentName").val("");
-      var course =$("#course").val("");
-      var studentGrade=$("#studentGrade").val("");
+      var studentName= document.getElementById("studentName").value="";
+      var course =document.getElementById("course").value="";
+      var studentGrade=document.getElementById("studentGrade").value="";
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -117,6 +128,8 @@ function renderStudentOnDom(newStudent){
       $(inner_td_button).append(button);
       $(outer_tr).append(inner_td_name, inner_td_course, inner_td_grade, inner_td_button);
       $('.student-list tbody').append(outer_tr);
+      deleteButton(button,newStudent)
+     
 }
 
 
@@ -152,8 +165,93 @@ for(var x =0;x<array.length;x++){
  * @returns {undefined} none
  */
 function renderGradeAverage(number){
-      $(".avgGrade").text(number);
+      var avgGrade= document.getElementsByClassName("avgGrade");
+      for(var x=0;x<avgGrade.length;x++){
+            avgGrade[x].innerText=number;
+      }
+     
+    
 }
+function deleteButton(button,student){
+      $(button).on("click",function(){
+            var element=this;
+
+            removeStudent(student,element);
+            var crud={deleteStudent:student,crudName:"deleteStudent"};
+            serverCall(crud);
+
+      });
+}
+function removeStudent(studentDeleted,element){
+  var location=student_array.indexOf(studentDeleted);
+  student_array.splice(location,1);
+  $(element).parent().parent().empty();
+}
+
+function serverCall(crud){
+      
+      switch(crud.crudName){
+
+      case "deleteStudent":
+            var dataPull={url:"http://s-apis.learningfuze.com/sgt/delete",
+                  method:'POST',
+                  dataType:'json',
+                  data:{"api_key":"ToxPuUbzst",
+                        "student_id":crud.deleteStudent.id},
+                  success:deleteStudent
+            }
+            break;
+
+      case "createStudent":
+            var dataPull={url:"http://s-apis.learningfuze.com/sgt/create",
+                  method:'POST',
+                  dataType:'json',
+                  data:{"api_key":"ToxPuUbzst",
+                         "name":crud.newstudent.name,
+                           "course":crud.newstudent.course,
+                            "grade":crud.newstudent.grade
+                        },
+                  success:createStudent
+            }
+            break;
+      default :
+    
+            var dataPull={url:"http://s-apis.learningfuze.com/sgt/get",
+                  method:'POST',
+                  dataType:'json',
+                  data:{"api_key":"ToxPuUbzst"},
+                  success:dataCapture
+            }
+      }
+    
+      $.ajax(dataPull);
+      
+}
+
+function dataCapture(response){
+      console.log(response);
+      $(".student-list>tbody").empty()
+      student_array=[];
+      var createStudent=false;
+      for(var x=0;x<response.data.length;x++){
+            addStudent(response.data[x].name,response.data[x].course,response.data[x].grade,response.data[x].id,createStudent); 
+      }
+     
+}
+
+function createStudent(response){
+
+var crud={crudName:"undefine"};
+
+serverCall(crud);
+}
+
+function deleteStudent(response){
+
+var crud={crudName:"undefine"};
+serverCall(crud);
+}
+
 
 
 
