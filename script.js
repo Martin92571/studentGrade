@@ -5,7 +5,7 @@
 /**
  * Listen for the document to load and initialize the application
  */
-$(document).ready(initializeApp);
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 /**
  * Define all global variables here.  
@@ -48,7 +48,7 @@ function addClickHandlersToElements(){
       });
 
       
-      // $("#server").on("click" ,{crud:"serverCall"} ,serverCall);
+      
 }
 
 /***************************************************************************************************
@@ -109,25 +109,34 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom(newStudent){
 
-      var outer_tr = $('<tr>');
-      var inner_td_name = $('<td>', {
-            text: newStudent.name,
-      });
-      var inner_td_course = $('<td>', {
-            text: newStudent.course,
-      });
-      var inner_td_grade = $('<td>', {
-            text: newStudent.grade,
-      })
-      var inner_td_button = $('<td>');
-      var button = $('<button>', {
-            text: 'Delete',
-            class: 'btn btn-danger delete',
-      })
+      let outer_tr =document.createElement("tr");
+      let inner_td_name =document.createElement("td");
+      let inner_td_text=document.createTextNode(newStudent.name);
+      inner_td_name.appendChild(inner_td_text);
+
+      let inner_td_course = document.createElement("td");
+      let inner_td_course_text= document.createTextNode(newStudent.course);
+      inner_td_course.appendChild(inner_td_course_text);
+
+      let inner_td_grade = document.createElement("td");
+      let inner_td_grade_text= document.createTextNode(newStudent.grade);
+      inner_td_grade.appendChild(inner_td_grade_text);
+
+      let inner_td_button =document.createElement("td");
+      let button =document.createElement("button");
+      button.className='btn btn-danger delete';
+      let button_text=document.createTextNode('Delete');
+      button.appendChild(button_text);
+      inner_td_button.appendChild(button);
       
-      $(inner_td_button).append(button);
-      $(outer_tr).append(inner_td_name, inner_td_course, inner_td_grade, inner_td_button);
-      $('.student-list tbody').append(outer_tr);
+
+      outer_tr.appendChild(inner_td_name);
+      outer_tr.appendChild(inner_td_course);
+      outer_tr.appendChild(inner_td_grade);
+      outer_tr.appendChild(inner_td_button);
+
+      document.querySelector(".student-list tbody").appendChild(outer_tr);
+     
       deleteButton(button,newStudent)
      
 }
@@ -152,11 +161,11 @@ function updateStudentList(student){
  */
 function calculateGradeAverage(array){
 
-var studentGradeSum= null;
+let studentGradeSum= null;
 for(var x =0;x<array.length;x++){
    studentGradeSum+= parseFloat(array[x].grade);
  }
- var studentGradeAverage = parseFloat(studentGradeSum/x);
+ let studentGradeAverage = parseFloat(studentGradeSum/x);
  return studentGradeAverage;
 }
 /***************************************************************************************************
@@ -165,27 +174,28 @@ for(var x =0;x<array.length;x++){
  * @returns {undefined} none
  */
 function renderGradeAverage(number){
-      var avgGrade= document.getElementsByClassName("avgGrade");
-      for(var x=0;x<avgGrade.length;x++){
+      let avgGrade= document.getElementsByClassName("avgGrade");
+      for(let x=0;x<avgGrade.length;x++){
             avgGrade[x].innerText=number;
       }
      
     
 }
 function deleteButton(button,student){
-      $(button).on("click",function(){
-            var element=this;
+      button.addEventListener("click",function(){
+            let element=this;
 
             removeStudent(student,element);
-            var crud={deleteStudent:student,crudName:"deleteStudent"};
+            let crud={deleteStudent:student,crudName:"deleteStudent"};
             serverCall(crud);
 
       });
 }
 function removeStudent(studentDeleted,element){
-  var location=student_array.indexOf(studentDeleted);
+  let location=student_array.indexOf(studentDeleted);
   student_array.splice(location,1);
-  $(element).parent().parent().empty();
+  element.parentNode.parentNode.remove();
+  
 }
 
 function serverCall(crud){
@@ -200,6 +210,7 @@ function serverCall(crud){
                         "student_id":crud.deleteStudent.id},
                   success:deleteStudent
             }
+            ajaxCall(dataPull)
             break;
 
       case "createStudent":
@@ -213,24 +224,42 @@ function serverCall(crud){
                         },
                   success:createStudent
             }
+            ajaxCall(dataPull)
             break;
       default :
     
             var dataPull={url:"http://s-apis.learningfuze.com/sgt/get",
                   method:'POST',
                   dataType:'json',
-                  data:{"api_key":"ToxPuUbzst"},
+                  data:"api_key=ToxPuUbzst",
                   success:dataCapture
             }
+            ajaxCall(dataPull)
       }
     
-      $.ajax(dataPull);
-      
+      // $.ajax(dataPull);
+      function ajaxCall(dataPull){
+        
+            var xhttp = new XMLHttpRequest();
+         
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+               dataPull.success(JSON.parse(this.response));
+              }
+            };
+            xhttp.open("POST", dataPull.url);
+            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhttp.send(dataPull.data);
+
+
+          }
 }
+      
+
 
 function dataCapture(response){
       console.log(response);
-      $(".student-list>tbody").empty()
+      document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
       var createStudent=false;
       for(var x=0;x<response.data.length;x++){
