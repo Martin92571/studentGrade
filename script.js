@@ -238,23 +238,25 @@ function serverCall(crud){
             ajaxCall(dataPull)
       }
     
-      // $.ajax(dataPull);
-      function ajaxCall(dataPull){
-        
-            let xhttp = new XMLHttpRequest();
-         
-            xhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-               dataPull.success(JSON.parse(this.response));
-              }
-            };
-            xhttp.open("POST", dataPull.url);
-            xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhttp.send(dataPull.data);
-
-
-          }
+     
+      
 }
+
+function ajaxCall(dataPull){
+        
+      let xhttp = new XMLHttpRequest();
+   
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+         dataPull.success(JSON.parse(this.response));
+        }
+      };
+      xhttp.open("POST", dataPull.url);
+      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhttp.send(dataPull.data);
+
+
+    }
       
 
 
