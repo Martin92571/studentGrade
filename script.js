@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', initializeApp);
  *  { name: 'Jill', course: 'Comp Sci', grade: 85 }
  * ];
  */
-var student_array=[];
+let student_array=[];
 
 /***************************************************************************************************
 * initializeApp 
@@ -59,10 +59,10 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(event){
    
-      var studentName= document.getElementById("studentName").value;
-      var course =document.getElementById("course").value;
-      var studentGrade=parseFloat(document.getElementById("studentGrade").value);
-      var createStudent=true;
+      let studentName= document.getElementById("studentName").value;
+      let course =document.getElementById("course").value;
+      let studentGrade=parseFloat(document.getElementById("studentGrade").value);
+      let createStudent=true;
       addStudent(studentName,course,studentGrade,null,createStudent);
 
 }
@@ -83,9 +83,9 @@ function handleCancelClick(){
  */
 function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
     
-    var student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
+    let student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
     
-    var crud={crudName:"createStudent",newstudent:student};
+    let crud={crudName:"createStudent",newstudent:student};
     student_array.push(student);
     
     if(createStudent){
@@ -98,9 +98,9 @@ function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-      var studentName= document.getElementById("studentName").value="";
-      var course =document.getElementById("course").value="";
-      var studentGrade=document.getElementById("studentGrade").value="";
+      let studentName= document.getElementById("studentName").value="";
+      let course =document.getElementById("course").value="";
+      let studentGrade=document.getElementById("studentGrade").value="";
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -175,8 +175,8 @@ for(var x =0;x<array.length;x++){
  */
 function renderGradeAverage(number){
       let avgGrade= document.getElementsByClassName("avgGrade");
-      for(let x=0;x<avgGrade.length;x++){
-            avgGrade[x].innerText=number;
+      for(var x=0;x<avgGrade.length;x++){
+            avgGrade[x].innerText=number.toFixed(2);
       }
      
     
@@ -203,32 +203,33 @@ function serverCall(crud){
       switch(crud.crudName){
 
       case "deleteStudent":
-            var dataPull={url:"http://s-apis.learningfuze.com/sgt/delete",
+            var dataPull={
+                  url:"http://s-apis.learningfuze.com/sgt/delete",
                   method:'POST',
                   dataType:'json',
-                  data:{"api_key":"ToxPuUbzst",
-                        "student_id":crud.deleteStudent.id},
+                  data:`api_key=ToxPuUbzst&student_id=${crud.deleteStudent.id}`,
+                      
                   success:deleteStudent
             }
             ajaxCall(dataPull)
             break;
 
       case "createStudent":
-            var dataPull={url:"http://s-apis.learningfuze.com/sgt/create",
+            var dataPull={
+                  url:"http://s-apis.learningfuze.com/sgt/create",
                   method:'POST',
                   dataType:'json',
-                  data:{"api_key":"ToxPuUbzst",
-                         "name":crud.newstudent.name,
-                           "course":crud.newstudent.course,
-                            "grade":crud.newstudent.grade
-                        },
+                  data:`api_key=ToxPuUbzst&name=${crud.newstudent.name}&course=${crud.newstudent.course}&grade=${crud.newstudent.grade}`,
+                        
+                        
                   success:createStudent
             }
             ajaxCall(dataPull)
             break;
       default :
     
-            var dataPull={url:"http://s-apis.learningfuze.com/sgt/get",
+            var dataPull={
+                  url:"http://s-apis.learningfuze.com/sgt/get",
                   method:'POST',
                   dataType:'json',
                   data:"api_key=ToxPuUbzst",
@@ -240,7 +241,7 @@ function serverCall(crud){
       // $.ajax(dataPull);
       function ajaxCall(dataPull){
         
-            var xhttp = new XMLHttpRequest();
+            let xhttp = new XMLHttpRequest();
          
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
@@ -261,7 +262,7 @@ function dataCapture(response){
       console.log(response);
       document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
-      var createStudent=false;
+      let createStudent=false;
       for(var x=0;x<response.data.length;x++){
             addStudent(response.data[x].name,response.data[x].course,response.data[x].grade,response.data[x].id,createStudent); 
       }
@@ -270,14 +271,14 @@ function dataCapture(response){
 
 function createStudent(response){
 
-var crud={crudName:"undefine"};
+let crud={crudName:"undefined"};
 
 serverCall(crud);
 }
 
 function deleteStudent(response){
 
-var crud={crudName:"undefine"};
+let crud={crudName:"undefined"};
 serverCall(crud);
 }
 
