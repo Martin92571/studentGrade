@@ -43,7 +43,7 @@ function addClickHandlersToElements(){
 
       document.getElementById("add").addEventListener("click",handleAddClicked);
       document.getElementById("cancel").addEventListener("click",handleCancelClick);
-      document.getElementById("server").addEventListener("click",function(){
+      document.getElementById("server").addEventListener("click",()=>{
             serverCall("serverCall");
       });
 
@@ -62,7 +62,7 @@ function handleAddClicked(event){
       let studentName= document.getElementById("studentName").value;
       let course =document.getElementById("course").value;
       let studentGrade=parseFloat(document.getElementById("studentGrade").value);
-      let createStudent=true;
+      const createStudent=true;
       addStudent(studentName,course,studentGrade,null,createStudent);
 
 }
@@ -83,9 +83,9 @@ function handleCancelClick(){
  */
 function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
     
-    let student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
+    const student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
     
-    let crud={crudName:"createStudent",newstudent:student};
+    const crud={crudName:"createStudent",newstudent:student};
     student_array.push(student);
     
     if(createStudent){
@@ -109,23 +109,23 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom(newStudent){
 
-      let outer_tr =document.createElement("tr");
-      let inner_td_name =document.createElement("td");
+      const outer_tr =document.createElement("tr");
+      const inner_td_name =document.createElement("td");
       let inner_td_text=document.createTextNode(newStudent.name);
       inner_td_name.appendChild(inner_td_text);
 
-      let inner_td_course = document.createElement("td");
+      const inner_td_course = document.createElement("td");
       let inner_td_course_text= document.createTextNode(newStudent.course);
       inner_td_course.appendChild(inner_td_course_text);
 
-      let inner_td_grade = document.createElement("td");
+      const inner_td_grade = document.createElement("td");
       let inner_td_grade_text= document.createTextNode(newStudent.grade);
       inner_td_grade.appendChild(inner_td_grade_text);
 
-      let inner_td_button =document.createElement("td");
-      let button =document.createElement("button");
+      const inner_td_button =document.createElement("td");
+      const button =document.createElement("button");
       button.className='btn btn-danger delete';
-      let button_text=document.createTextNode('Delete');
+      const button_text=document.createTextNode('Delete');
       button.appendChild(button_text);
       inner_td_button.appendChild(button);
       
@@ -174,7 +174,7 @@ for(var x =0;x<array.length;x++){
  * @returns {undefined} none
  */
 function renderGradeAverage(number){
-      let avgGrade= document.getElementsByClassName("avgGrade");
+      const avgGrade= document.getElementsByClassName("avgGrade");
       for(let x=0;x<avgGrade.length;x++){
             avgGrade[x].innerText=number.toFixed(2);
       }
@@ -183,10 +183,10 @@ function renderGradeAverage(number){
 }
 function deleteButton(button,student){
       button.addEventListener("click",function(){
-            let element=this;
+            const element=this;
 
             removeStudent(student,element);
-            let crud={deleteStudent:student,crudName:"deleteStudent"};
+            const crud={deleteStudent:student,crudName:"deleteStudent"};
             serverCall(crud);
 
       });
@@ -244,11 +244,11 @@ function serverCall(crud){
 
 function ajaxCall(dataPull){
         
-      let xhttp = new XMLHttpRequest();
+      const xhttp = new XMLHttpRequest();
    
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange =function() {
         if (this.readyState == 4 && this.status == 200) {
-         dataPull.success(JSON.parse(this.response));
+        return dataPull.success(JSON.parse(this.response));
         }
       };
       xhttp.open("POST", dataPull.url);
@@ -264,7 +264,7 @@ function dataCapture(response){
       console.log(response);
       document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
-      let createStudent=false;
+      const createStudent=false;
       for(let x=0;x<response.data.length;x++){
             addStudent(response.data[x].name,response.data[x].course,response.data[x].grade,response.data[x].id,createStudent); 
       }
@@ -273,14 +273,14 @@ function dataCapture(response){
 
 function createStudent(response){
 
-let crud={crudName:"undefined"};
+const crud={crudName:"undefined"};
 
 serverCall(crud);
 }
 
 function deleteStudent(response){
 
-let crud={crudName:"undefined"};
+const crud={crudName:"undefined"};
 serverCall(crud);
 }
 
