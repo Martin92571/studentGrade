@@ -162,10 +162,11 @@ function updateStudentList(student){
 function calculateGradeAverage(array){
 
 let studentGradeSum= null;
-for(var x =0;x<array.length;x++){
-   studentGradeSum+= parseFloat(array[x].grade);
- }
- let studentGradeAverage = parseFloat(studentGradeSum/x);
+array.map(student=>{
+     studentGradeSum+= parseFloat(student.grade);
+})
+
+ let studentGradeAverage = parseFloat(studentGradeSum/array.length);
  return studentGradeAverage;
 }
 /***************************************************************************************************
@@ -174,7 +175,8 @@ for(var x =0;x<array.length;x++){
  * @returns {undefined} none
  */
 function renderGradeAverage(number){
-      const avgGrade= document.getElementsByClassName("avgGrade");
+      let avgGrade= document.getElementsByClassName("avgGrade");
+   
       for(let x=0;x<avgGrade.length;x++){
             avgGrade[x].innerText=number.toFixed(2);
       }
@@ -244,16 +246,16 @@ function serverCall(crud){
 
 function ajaxCall(dataPull){
         
-      const xhttp = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
    
-      xhttp.onreadystatechange =function() {
+      xhr.onload =function() {
         if (this.readyState == 4 && this.status == 200) {
         return dataPull.success(JSON.parse(this.response));
         }
       };
-      xhttp.open("POST", dataPull.url);
-      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhttp.send(dataPull.data);
+      xhr.open("POST", dataPull.url);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send(dataPull.data);
 
 
     }
@@ -261,13 +263,16 @@ function ajaxCall(dataPull){
 
 
 function dataCapture(response){
-      console.log(response);
+     
       document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
       const createStudent=false;
-      for(let x=0;x<response.data.length;x++){
-            addStudent(response.data[x].name,response.data[x].course,response.data[x].grade,response.data[x].id,createStudent); 
-      }
+      
+      response.data.map(student=>{
+           console.log(student)
+           addStudent(student.name,student.course,student.grade,student.id,createStudent)
+      });
+     
      
 }
 
