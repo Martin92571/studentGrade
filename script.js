@@ -175,7 +175,7 @@ for(var x =0;x<array.length;x++){
  */
 function renderGradeAverage(number){
       let avgGrade= document.getElementsByClassName("avgGrade");
-      for(var x=0;x<avgGrade.length;x++){
+      for(let x=0;x<avgGrade.length;x++){
             avgGrade[x].innerText=number.toFixed(2);
       }
      
@@ -199,11 +199,11 @@ function removeStudent(studentDeleted,element){
 }
 
 function serverCall(crud){
-      
+      let dataPull;
       switch(crud.crudName){
 
       case "deleteStudent":
-            var dataPull={
+            dataPull={
                   url:"http://s-apis.learningfuze.com/sgt/delete",
                   method:'POST',
                   dataType:'json',
@@ -215,7 +215,7 @@ function serverCall(crud){
             break;
 
       case "createStudent":
-            var dataPull={
+             dataPull={
                   url:"http://s-apis.learningfuze.com/sgt/create",
                   method:'POST',
                   dataType:'json',
@@ -228,7 +228,7 @@ function serverCall(crud){
             break;
       default :
     
-            var dataPull={
+             dataPull={
                   url:"http://s-apis.learningfuze.com/sgt/get",
                   method:'POST',
                   dataType:'json',
@@ -265,7 +265,7 @@ function dataCapture(response){
       document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
       let createStudent=false;
-      for(var x=0;x<response.data.length;x++){
+      for(let x=0;x<response.data.length;x++){
             addStudent(response.data[x].name,response.data[x].course,response.data[x].grade,response.data[x].id,createStudent); 
       }
      
