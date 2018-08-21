@@ -31,6 +31,7 @@ let student_array=[];
 */
 function initializeApp(){
 addClickHandlersToElements();
+serverCall("serverCall");
 }
 
 /***************************************************************************************************
@@ -43,11 +44,8 @@ function addClickHandlersToElements(){
 
       document.getElementById("add").addEventListener("click",handleAddClicked);
       document.getElementById("cancel").addEventListener("click",handleCancelClick);
-      document.getElementById("server").addEventListener("click",()=>{
-            serverCall("serverCall");
-      });
-
       
+
       
 }
 
@@ -123,11 +121,18 @@ function renderStudentOnDom(newStudent){
       inner_td_grade.appendChild(inner_td_grade_text);
 
       const inner_td_button =document.createElement("td");
-      const button =document.createElement("button");
-      button.className='btn btn-danger delete';
+
+      const buttonUpdate =document.createElement("button");
+      buttonUpdate.className='btn btn-success update';
+      const button_text_update=document.createTextNode('Update');
+      buttonUpdate.appendChild(button_text_update);
+      inner_td_button.appendChild(buttonUpdate);
+
+      const buttonDelete =document.createElement("button");
+      buttonDelete.className='btn btn-danger delete';
       const button_text=document.createTextNode('Delete');
-      button.appendChild(button_text);
-      inner_td_button.appendChild(button);
+      buttonDelete.appendChild(button_text);
+      inner_td_button.appendChild(buttonDelete);
       
 
       outer_tr.appendChild(inner_td_name);
@@ -136,8 +141,8 @@ function renderStudentOnDom(newStudent){
       outer_tr.appendChild(inner_td_button);
 
       document.querySelector(".student-list tbody").appendChild(outer_tr);
-     
-      deleteButton(button,newStudent)
+      updateButton(buttonUpdate,newStudent);
+      deleteButton(buttonDelete,newStudent);
      
 }
 
@@ -193,6 +198,56 @@ function deleteButton(button,student){
 
       });
 }
+function cancelModal(){
+      let modal=document.getElementsByClassName("modal")[0];
+            
+            modal.classList.add("hide");
+            modal.classList.remove("show");
+}
+function updateButton(button,student){
+      
+      button.addEventListener("click",()=>{
+          
+            let name = document.querySelector(".updateName").value=student.name;
+            let course = document.querySelector(".updateCourse").value=student.course;
+            let grade = document.querySelector(".updateGrade").value=student.grade;
+            let modal=document.getElementsByClassName("modal")[0];
+            
+            modal.classList.remove("hide");
+            modal.classList.add("show");
+            let updateAjax= document.querySelector(".updateAjax");
+           updateAjax.addEventListener("click",function ajax(){
+                 updateStudent(student);
+                 updateAjax.removeEventListener("click",ajax);
+           });
+           let cancel_modal=document.querySelector(".cancelModal");
+           cancel_modal.addEventListener("click",()=>{
+                 cancelModal()
+           });
+
+           
+            
+
+          
+           
+            
+
+      });
+     
+}
+
+function updateStudent(student){
+      
+      let name = document.querySelector(".updateName").value;
+      let course = document.querySelector(".updateCourse").value;
+      let grade = document.querySelector(".updateGrade").value;
+      const crud={name,course,grade,id:student.id,crudName:"updateStudent"};
+      let modal=document.getElementsByClassName("modal")[0];
+      modal.classList.remove("show");
+      modal.classList.add("hide");
+      serverCall(crud);
+
+}
 function removeStudent(studentDeleted,element){
   let location=student_array.indexOf(studentDeleted);
   student_array.splice(location,1);
@@ -206,7 +261,8 @@ function serverCall(crud){
 
       case "deleteStudent":
             dataPull={
-                  url:"http://s-apis.learningfuze.com/sgt/delete",
+            
+                  url:"http://localhost/SGT/php_sgt/data.php?action=delete",
                   method:'POST',
                   dataType:'json',
                   data:`api_key=ToxPuUbzst&student_id=${crud.deleteStudent.id}`,
@@ -218,7 +274,7 @@ function serverCall(crud){
 
       case "createStudent":
              dataPull={
-                  url:"http://s-apis.learningfuze.com/sgt/create",
+                  url:"http://localhost/SGT/php_sgt/data.php?action=insert",
                   method:'POST',
                   dataType:'json',
                   data:`api_key=ToxPuUbzst&name=${crud.newstudent.name}&course=${crud.newstudent.course}&grade=${crud.newstudent.grade}`,
@@ -228,10 +284,24 @@ function serverCall(crud){
             }
             ajaxCall(dataPull)
             break;
+      case "updateStudent":
+      
+            dataPull={
+            url:"http://localhost/SGT/php_sgt/data.php?action=update",
+            method:'POST',
+            dataType:'json',
+            data:`api_key=ToxPuUbzst&name=${crud.name}&course=${crud.course}&grade=${crud.grade}&student_id=${crud.id}`,
+                  
+                  
+            success:createStudent
+      }
+      ajaxCall(dataPull)
+      break;
+
       default :
     
              dataPull={
-                  url:"http://s-apis.learningfuze.com/sgt/get",
+                  url:"http://localhost/SGT/php_sgt/data.php?action=readAll",
                   method:'POST',
                   dataType:'json',
                   data:"api_key=ToxPuUbzst",
@@ -269,7 +339,7 @@ function dataCapture(response){
       const createStudent=false;
       
       response.data.map(student=>{
-           console.log(student)
+      
            addStudent(student.name,student.course,student.grade,student.id,createStudent)
       });
      
