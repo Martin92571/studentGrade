@@ -57,11 +57,10 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(event){
    
-      let studentName= document.getElementById("studentName").value;
-      let course =document.getElementById("course").value;
-      let studentGrade=parseFloat(document.getElementById("studentGrade").value);
+      let studentArray=getStudentFormValue(); 
       const createStudent=true;
-      addStudent(studentName,course,studentGrade,null,createStudent);
+      addStudent(studentArray.student.value,studentArray.course.value
+                ,parseFloat(studentArray.grade.value),null,createStudent);
 
 }
 /***************************************************************************************************
@@ -71,6 +70,10 @@ function handleAddClicked(event){
  * @calls: clearAddStudentFormInputs
  */
 function handleCancelClick(){
+      let studentArray=getStudentFormValue();
+      for(a in studentArray){
+            studentArray[a].classList.remove("error");
+      }
       clearAddStudentFormInputs();
 }
 /***************************************************************************************************
@@ -79,19 +82,44 @@ function handleCancelClick(){
  * @return undefined
  * @calls clearAddStudentFormInputs, updateStudentList
  */
+function getStudentFormValue(){
+      let studentArray={
+            student:document.getElementById("studentName"),
+            course:document.getElementById("course"),
+            grade:document.getElementById("studentGrade")
+        }
+        return studentArray;
+}
 function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
-    
+  let studentArray=getStudentFormValue(); 
+  if(studentName.trim()!="" && courseType.trim()!="" && studentGrade!="" && !isNaN(studentGrade)){
+        
+      for(a in studentArray){
+                  studentArray[a].classList.remove("error");
+            }    
     const student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
-    
     const crud={crudName:"createStudent",newstudent:student};
     student_array.push(student);
     
     if(createStudent){
+
       serverCall(crud);
     }
     updateStudentList(student);
     clearAddStudentFormInputs();
-}
+  }
+  else{
+      for(a in studentArray){
+            studentArray[a].classList.remove("error");
+      }
+        for(a in studentArray){
+            if(studentArray[a].value.trim()==""){
+                 studentArray[a].classList.add("error");
+           }
+        };
+  }
+ }
+
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
@@ -191,12 +219,39 @@ function renderGradeAverage(number){
 function deleteButton(button,student){
       button.addEventListener("click",function(){
             const element=this;
+            const deleteModal=document.querySelector(".deleteModal");
+            let name = document.querySelector(".DeleteName").value=student.name;
+            let course = document.querySelector(".DeleteCourse").value=student.course;
+            let grade = document.querySelector(".DeleteGrade").value=student.grade;
+            deleteModal.classList.remove("hide");
+            deleteModal.classList.add("show");
+            confirmDeleteModal(element,student);
 
-            removeStudent(student,element);
-            const crud={deleteStudent:student,crudName:"deleteStudent"};
-            serverCall(crud);
+            
+          
+            
 
       });
+}
+function confirmDeleteModal(element,student){
+      let deleteAjax= document.querySelector(".DeleteAjax");
+      deleteAjax.addEventListener("click",()=>{
+            const crud={deleteStudent:student,crudName:"deleteStudent"};
+            removeStudent(student,element);
+            serverCall(crud);
+            deleteModalHide();
+      });
+      let deleteCancel_modal=document.querySelector(".cancelDelete");
+      deleteCancel_modal.addEventListener("click",()=>{
+            deleteModalHide()
+      });
+      
+}
+function deleteModalHide(){
+      const deleteModal=document.querySelector(".deleteModal");
+      deleteModal.classList.add("hide");     
+      deleteModal.classList.remove("show");
+      
 }
 function cancelModal(){
       let modal=document.getElementsByClassName("modal")[0];
@@ -262,7 +317,7 @@ function serverCall(crud){
       case "deleteStudent":
             dataPull={
             
-                  url:"http://localhost/SGT/php_sgt/data.php?action=delete",
+                  url:"http://localhost/studentGrade/php_sgt/data.php?action=delete",
                   method:'POST',
                   dataType:'json',
                   data:`api_key=ToxPuUbzst&student_id=${crud.deleteStudent.id}`,
@@ -274,7 +329,7 @@ function serverCall(crud){
 
       case "createStudent":
              dataPull={
-                  url:"http://localhost/SGT/php_sgt/data.php?action=insert",
+                  url:"http://localhost/studentGrade/php_sgt/data.php?action=insert",
                   method:'POST',
                   dataType:'json',
                   data:`api_key=ToxPuUbzst&name=${crud.newstudent.name}&course=${crud.newstudent.course}&grade=${crud.newstudent.grade}`,
@@ -287,7 +342,7 @@ function serverCall(crud){
       case "updateStudent":
       
             dataPull={
-            url:"http://localhost/SGT/php_sgt/data.php?action=update",
+            url:"http://localhost/studentGrade/php_sgt/data.php?action=update",
             method:'POST',
             dataType:'json',
             data:`api_key=ToxPuUbzst&name=${crud.name}&course=${crud.course}&grade=${crud.grade}&student_id=${crud.id}`,
@@ -301,7 +356,7 @@ function serverCall(crud){
       default :
     
              dataPull={
-                  url:"http://localhost/SGT/php_sgt/data.php?action=readAll",
+                  url:"http://localhost/studentGrade/php_sgt/data.php?action=readAll",
                   method:'POST',
                   dataType:'json',
                   data:"api_key=ToxPuUbzst",

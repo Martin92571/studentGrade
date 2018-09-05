@@ -1,4 +1,16 @@
-
+.deleteModal{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10,10,10,0.8);
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    z-index: 1055;
+}
 .modal{
     background-color: rgba(10,10,10,0.8);
     justify-content: center;
@@ -10,7 +22,7 @@
 .show{
     display: flex !important;
 }
-.modal-container{
+.modal-container,.deleteModalContainer{
     border-radius: 10px;
     width:50%;
     height: 60%;
@@ -46,7 +58,9 @@
 .modal-form{
     text-align: center;
 }
-
+.error{
+    border-color:red;
+}
 @media only screen and (max-width: 580px) {
     .btn-success.update{
         margin-bottom: 0.5em;

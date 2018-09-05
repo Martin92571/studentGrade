@@ -9,7 +9,39 @@
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
-
+<div class="deleteModal hide">
+    <div class="deleteModalContainer">
+        <div class="formUpdate">
+            <form  class="modal-form">
+                <label for="DeleteName" >Student Name</label>
+                <div class="input-group form-group">
+                   <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </span>
+                    <input type="text" class="form-control DeleteName" id="DeleteName" placeholder="Student Name" readonly>
+                </div>
+                <label for="DeleteCourse" >Course</label>
+                <div class="input-group form-group">
+                   <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                    </span>
+                    <input type="text" class="form-control DeleteCourse" id="DeleteCourse" placeholder="Course" readonly>
+                </div>
+                <label for="DeleteGrade" >Grade</label>
+                <div class="input-group form-group">
+                   <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-education"></span>
+                    </span>
+                    <input type="text" class="form-control DeleteGrade" id="DeleteGrade" placeholder="Grade" readonly>
+                </div>  
+                 <p>Are you sure you want to delete?</p>
+                <button type="button" class="DeleteAjax btn btn-danger">Confirm</button>
+                <button type="button" class="btn btn-default cancelDelete">Cancel</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="modal hide">
                 <div class="modal-container">
@@ -34,7 +66,7 @@
                                <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-education"></span>
                                 </span>
-                                <input type="text" class="form-control updateGrade" id="updateGrade" placeholder="Grade">
+                                <input type="number" class="form-control updateGrade" id="updateGrade" placeholder="Grade">
                             </div>  
                     
                             <button type="button" class="updateAjax btn btn-success">Submit</button>
@@ -73,7 +105,7 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
-            <input type="text" class="form-control" name="studentGrade" id="studentGrade"
+            <input type="number" class="form-control" name="studentGrade" id="studentGrade"
                    placeholder="Student Grade">
         </div>
         <button type="button" class="btn btn-success" id="add" onclick="">Add</button>
