@@ -128,11 +128,8 @@
 	display: flex;
     flex-direction: column;
 	justify-content: center;
-	background: -webkit-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* Chrome 10+, Saf5.1+ */
-  background:    -moz-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* FF3.6+ */
-  background:     -ms-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* IE10 */
-  background:      -o-linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* Opera 11.10+ */
-  background:         linear-gradient(90deg, #2BC0E4 10%, #EAECC6 90%); /* W3C */
+	background-color: rgba(0, 0, 0, 0.9);/* Chrome 10+, Saf5.1+ */
+ 
 
 }
 .cancel{
@@ -145,24 +142,14 @@
     border: 1px solid #FFF;
     background-color: #FFF;
 }
-.cancel .svg-inline--fa {
+.cancel i{
 	font-size: 1.8em;
 	color:#3cb094;
 }
 .hide{
 	display:none;
 }
-.signBtn{
-	position: absolute;
-    right: 0%;
-	font-size: 1.2em !important;
-	margin-top: 0.3em;
 
-    
-}
-.signBtn button{
-	padding: 0.4em 1.5em !important;
-}
 
 
 .signup-form form {
@@ -236,7 +223,7 @@
     right: 10px;
 }
 
-.cancelSignUp .svg-inline--fa {
+.cancelSignUp i {
 	font-size: 2em;
 	color:#3cb094;
 

@@ -32,6 +32,8 @@ let student_array=[];
 function initializeApp(){
 addClickHandlersToElements();
 serverCall("serverCall");
+login();
+signUp();
 }
 
 /***************************************************************************************************
@@ -415,21 +417,24 @@ serverCall(crud);
 }
 
 /* Login and Signup Javascript*/
-$(".signBtn > .login").on("click",function(){
+function login(){
+$(".login").on("click",function(){
       loginPopUp();
 });
+}
 
-$(".signBtn > .signUp").on("click",function(){
+function signUp(){
+$(".signUp").on("click",function(){
 $(".signup-form").removeClass("hide");
-$(".signup-form").addClass("animated bounceIn");
-setTimeout(()=>{$(".signup-form").removeClass("animated bounceIn")},1000);
+$(".signupPopUp").addClass("animated bounceIn");
+setTimeout(()=>{$(".signupPopUp").removeClass("animated bounceIn")},1000);
 $(".cancelSignUp").on("click",function(event){
       event.stopPropagation();
                   
-      $(".signup-form").addClass("animated bounceOut");
+      $(".signupPopUp").addClass("animated bounceOut");
       setTimeout(()=>{
             $(".signup-form").addClass("hide");
-            $(".signup-form").removeClass("animated bounceOut");
+            $(".signupPopUp").removeClass("animated bounceOut");
             clearForms();
       },1000);
       
@@ -446,7 +451,7 @@ $(".signUpBtn").on("click",()=>{
      signupAjax(signUpData);
       }
 });
-
+}
 function clearForms(){
 var username=$(".username").val("")
 var email=$(".email").val("")
