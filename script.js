@@ -425,11 +425,17 @@ $(".login").on("click",function(){
 
 function signUp(){
 $(".signUp").on("click",function(){
+ signupPopUp();
+});
+}
+function signupPopUp(){
+
+
 $(".signup-form").removeClass("hide");
 $(".signupPopUp").addClass("animated bounceIn");
 setTimeout(()=>{$(".signupPopUp").removeClass("animated bounceIn")},1000);
 $(".cancelSignUp").on("click",function(event){
-      event.stopPropagation();
+      
                   
       $(".signupPopUp").addClass("animated bounceOut");
       setTimeout(()=>{
@@ -437,21 +443,24 @@ $(".cancelSignUp").on("click",function(event){
             $(".signupPopUp").removeClass("animated bounceOut");
             clearForms();
       },1000);
-      
+      $(".cancelSignUp").off();
+      $(".signUpBtn").off();
 });
 $(".loginRedirect").on("click",function(event){
-      event.stopPropagation();
-      loginRedirect()
       
-});
+      loginRedirect();
+      
 });
 $(".signUpBtn").on("click",()=>{
       var signUpData=signUpForm();
       if(signUpData.validation){
      signupAjax(signUpData);
       }
+   
 });
 }
+
+
 function clearForms(){
 var username=$(".username").val("")
 var email=$(".email").val("")
@@ -460,19 +469,21 @@ var confirm_password=$(".confirm_password").val("");
 }
 function loginRedirect(){
 
-$(".signup-form").addClass("animated bounceOut");
+$(".signupPopUp").addClass("animated bounceOut");
 setTimeout(()=>{
+      $(".signupPopUp").removeClass("animated bounceOut");
       $(".signup-form").addClass("hide");
-      $(".signup-form").removeClass("animated bounceOut");
+      $(".cancelSignUp").off();
+      $(".signUpBtn").off();
       clearForms();
-},1000);
-setTimeout(()=>{loginPopUp()},700);
+},700);
+setTimeout(()=>{loginPopUp()},1150);
 }
 function signupAjax(data){
 data.password="tHodAoaSpp"+data.password+"627846";
 $.ajax({
  
-      url : 'http://localhost/Todo-App/TodoApp/server.php?action=signup',
+      url : 'http://localhost/studentGrade/php_sgt/data.php?action=signUp',
       type : 'POST',
       data : {
             'username' : data.username,
@@ -480,7 +491,8 @@ $.ajax({
             'password':data.password
       },
       dataType:'json',
-      success : function(data) {              
+      success : function(data) {
+            console.log(data);              
             loginRedirect();
       },
       error : function(request,error)
@@ -492,13 +504,13 @@ $.ajax({
 });
 }
 function signUpForm(){
-var validation=true;
-$(".Error").text("");
+
+
+var userCredentials=emailAndPasswordVerification("signUp");
+var validation=userCredentials.validate;
 var username=$(".username").val().trim();
-var email=$(".email").val().trim();
-var password=$(".password").val().trim();
 var confirm_password=$(".confirm_password").val().trim();
-var re =/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+
 
 if(username ==""){
       
@@ -507,29 +519,18 @@ if(username ==""){
    .addClass("Error animated flash");
    validation=false;
 }
-if(email=="" || !(re.test(email.trim())) ){
-      $(".emailError")
-      .text("- Invalid Email")
-      .addClass("Error animated flash");
-      validation=false;
-}
-if(password==""){
-      $(".passwordError")
-      .text("- password required")
-      .addClass("Error animated flash");
-      validation=false;
-}else if(password=="" && confirm_password !=""){
+if(userCredentials.password =="" && confirm_password !=""){
       $(".passwordError")
       .text("- password required")
       .addClass("Error animated flash");
       validation=false;
 }
-if(confirm_password=="" && password!=""){
+if(confirm_password=="" && userCredentials.password !=""){
       $(".confirm_passwordError")
       .text("- confirmation password required")
       .addClass("Error animated flash");
       validation=false;
-}else if(password !== confirm_password && password!=""){
+}else if(userCredentials.password !== confirm_password && userCredentials.password!=""){
       
       $(".confirm_passwordError")
       .text("- password doesn't match!")
@@ -542,22 +543,104 @@ setTimeout(()=>{
       $(".Error").removeClass("animated flash")
 },1200);
 
-var signObject={username:username,email:email,password:password,validation:validation};
+var signObject={username:username,email:userCredentials.email,password:userCredentials.password,validation:validation};
 return signObject;
 }
+function emailAndPasswordVerification(loginOrSignup){
+      var credentialsValidation=true;
+      var re =/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      $(".Error").text("");
+
+      switch(loginOrSignup){
+      case 'signup':      
+            var email=$(".email").val().trim();
+            var password=$(".password").val().trim();
+            
+            if(email=="" || !(re.test(email.trim())) ){
+                  $(".emailError")
+                  .text("- Invalid Email")
+                  .addClass("Error animated flash");
+                  credentialsValidation=false;
+            }
+            if(password==""){
+                  $(".passwordError")
+                  .text("- password required")
+                  .addClass("Error animated flash");
+                  credentialsValidation=false;
+            }
+            return userCredentials={validate:credentialsValidation,email:email,password:password};
+      
+      case 'login':      
+            var email=$(".inputEmail").val().trim();
+            var password=$(".inputPassword").val().trim();
+            
+            if(email=="" || !(re.test(email.trim())) ){
+                  $(".inputEmailError")
+                  .text("- Invalid Email")
+                  .addClass("Error animated flash");
+                  credentialsValidation=false;
+            }
+            if(password==""){
+                  $(".inputPassError")
+                  .text("- password required")
+                  .addClass("Error animated flash");
+                  credentialsValidation=false;
+            }
+            return userCredentials={validate:credentialsValidation,email:email,password:password};
+   }
+}
 function loginPopUp (){
+    
 $(".loginModal").removeClass("hide");
-$(".loginModal").addClass("animated bounceIn");
-setTimeout(()=>{$(".signupModal").removeClass("animated bounceIn")},1000);
+$(".loginPopUP").addClass("animated bounceIn");
+setTimeout(()=>{$(".loginPopUP").removeClass("animated bounceIn")},1000);
+
 $(".cancel").on("click",function(){
       
-      $(".loginModal").addClass("animated bounceOut");
+      $(".loginPopUP").addClass("animated bounceOut");
       setTimeout(()=>{
+            $(".loginPopUP").removeClass("animated bounceOut");
             $(".loginModal").addClass("hide");
-            $(".loginModal").removeClass("animated bounceOut");
+            
       },1000);
+      $(".cancel").off();
+});
+
+$(".loginEnter").on("click",function(){
+      loginForm();
 });
 }
+function loginForm(){
+      var loginData=emailAndPasswordVerification("login");
+      if(loginData.validate){
+     loginAjax(loginData);
+      }
+      
+}
+function loginAjax(data){
+      data.password="tHodAoaSpp"+data.password+"627846";
+      $.ajax({
+      
+            url : 'http://localhost/studentGrade/php_sgt/data.php?action=login',
+            type : 'POST',
+            data : {
+                  'email':data.email,
+                  'password':data.password
+            },
+            dataType:'json',
+            success : function(data) {
+                  console.log(data);              
+                  
+            },
+            error : function(request,error)
+            {
+                  loginRedirect();
+                  console.log(request);
+                  console.log(error);
+            }
+      });
+}
+
 
 
 
