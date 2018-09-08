@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $id=$_POST['student_id'];
 $name=$_POST['name'];
 $course=$_POST['course'];
@@ -7,7 +7,12 @@ $grade=$_POST['grade'];
 //check if you have all the data you need from the client-side call.  This should include the fields being changed and the ID of the student to be changed
 //if not, add an appropriate error to errors
 if(isset($id)&& isset($grade)&& isset($name)&& isset($course)){
-	$sql="UPDATE `student_data` SET `name`='{$name}',`grade`='{$grade}',`course`='{$course}' WHERE `id`='{$id}' ";
+	if(isset($_SESSION['user'])){
+		$sql="UPDATE `user_student_data` SET `name`='{$name}',`grade`='{$grade}',`course`='{$course}' WHERE `id`='{$id}' ";
+	}else{
+		$sql="UPDATE `student_data` SET `name`='{$name}',`grade`='{$grade}',`course`='{$course}' WHERE `id`='{$id}' ";
+	}
+	
 	$result = mysqli_query($conn,$sql);
 	if(empty($result)){
 		$output['errors'][]='database errors';

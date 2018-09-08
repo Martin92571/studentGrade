@@ -1,12 +1,20 @@
 <?php
-
+session_start();
+$confirmUser=$_SESSION['user'];
+$user=$_POST['user'];
 $name=$_POST['name'];
 $course=$_POST['course'];
 $grade=$_POST['grade'];
-
+if($user!==$confirmUser){
+	exit(0);
+}
 //check if you have all the data you need from the client-side call.  
 if(isset($name) && isset($course) && isset($grade)){
-   $sql="INSERT INTO `student_data`(`name`,`grade`,`course`) VALUES ('{$name}','{$grade}','{$course}')";
+   if($user!=='default'){
+	$sql="INSERT INTO `user_student_data`(`name`,`grade`,`course`,`user_name`) VALUES ('{$name}','{$grade}','{$course}','{$user}')";   
+   }else{
+    $sql="INSERT INTO `student_data`(`name`,`grade`,`course`) VALUES ('{$name}','{$grade}','{$course}')";
+   }
    $result = mysqli_query($conn,$sql);
    if(empty($result)){
 	   $output['errors'][]='database errors';

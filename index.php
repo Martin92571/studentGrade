@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Expires" content="-1">
 <?php
 session_start();
 if(isset($_SESSION['user'])){
@@ -161,8 +163,14 @@ if(isset($_SESSION['user'])){
     <div class="">
         <!-- only show this element when it isnt on mobile -->
         <h1 class="hidden-xs hidden-sm page-header ">Student Grade Table
-            <button type="button" class=" login col-md-offset-5 btn btn-primary">Login</button>
-            <button type="button" class=" signUp btn btn-success">Sign Up</button>
+            <?php 
+            if(isset($_SESSION['user'])){
+               echo "<button type=\"button\" class=\" Logout col-md-offset-6 btn btn-primary\">Logout</button>";
+            }else{
+               echo "<button type=\"button\" class=\" login col-md-offset-5 btn btn-primary\">Login</button>
+                <button type=\"button\" class=\" signUp btn btn-success\">Sign Up</button>";
+            }
+            ?>
             <small class="hidden-xs hidden-sm col-md-offset-1">Grade Average : <span class="avgGrade label label-default">0</span></small>
         </h1>
         

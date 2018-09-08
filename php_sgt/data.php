@@ -42,6 +42,9 @@ switch($_GET['action'] /*do a comparison switch on the get superglobal action*/)
 	case 'userRead':
 	   include 'dataApi/userRead.php';
 	   break;
+	case 'logout':
+	   include 'dataApi/logout.php';
+	   break;
 }
 
 //convert the $output variable to json, store the result in $outputJSON

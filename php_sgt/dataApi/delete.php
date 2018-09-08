@@ -1,9 +1,16 @@
 <?php
+session_start();
 
 $studentId=$_POST['student_id'];
 
 if(isset($studentId)){
+	
+if(isset($_SESSION['user'])){
+$sql="DELETE FROM `user_student_data` WHERE `id`='{$studentId}'";
+}else{
 $sql="DELETE FROM `student_data` WHERE `id`='{$studentId}'";
+}
+
 $result = mysqli_query($conn,$sql);
 if(empty($result)){
 	$output['errors'][]='database errors';

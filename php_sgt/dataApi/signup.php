@@ -1,7 +1,7 @@
 <?php
 $username=$_POST['username'];
 $email=$_POST['email'];
-$password=hash("sha256",$_POST['email']);
+$password=hash("sha256",$_POST['password']);
 $password=hash("md5",$password);
 $password=hash("sha256",$password);
 

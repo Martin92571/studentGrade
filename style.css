@@ -240,8 +240,12 @@
 	text-decoration: none;
 }
 .Error{
-	color:rgba(207, 38, 32, 1);
-	font-weight: 700;
+	color:rgba(207, 38, 32, 1) !important;
+	font-weight: 700 ;
+}
+.SuccessTrue{
+    color:#3cb094 !important;
+    font-weight: 700 ;
 }
 @media only screen and (max-width: 1000px) {
     .modal-form > .input-group{

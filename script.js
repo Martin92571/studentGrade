@@ -33,7 +33,6 @@ function initializeApp(){
 addClickHandlersToElements();
 if(window.userLoggedIn){
       let crud={crudName:"userLoggedIn"};
-      console.log("hitt");
       serverCall(crud);
       
 }else{
@@ -42,6 +41,7 @@ if(window.userLoggedIn){
 
 login();
 signUp();
+logout();
 }
 
 /***************************************************************************************************
@@ -66,10 +66,15 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(event){
-   
+      let user;
+      if(window.userLoggedIn){
+          user=window.userLoggedIn;
+      }else{
+            user="default"
+      }
       let studentArray=getStudentFormValue(); 
       const createStudent=true;
-      addStudent(studentArray.student.value,studentArray.course.value
+      addStudent(user,studentArray.student.value,studentArray.course.value
                 ,parseFloat(studentArray.grade.value),null,createStudent);
 
 }
@@ -100,24 +105,25 @@ function getStudentFormValue(){
         }
         return studentArray;
 }
-function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
+function addStudent(user,studentName,courseType,studentGrade,idNumber,createStudent){
 
   let studentArray=getStudentFormValue(); 
   if(studentName.trim()!="" && courseType.trim()!="" && studentGrade!="" && !isNaN(studentGrade)){
         
       for(a in studentArray){
-                  studentArray[a].classList.remove("error");
-            }    
-    const student ={ name: studentName, course: courseType, grade: studentGrade,id:idNumber };
-    const crud={crudName:"createStudent",newstudent:student};
-    student_array.push(student);
-    
-    if(createStudent){
+                        studentArray[a].classList.remove("error");
+                  }    
+      const student ={ user:user,name: studentName, course: courseType, grade: studentGrade,id:idNumber };
+      const crud={crudName:"createStudent",newstudent:student};
+      student_array.push(student);
+      
+      if(createStudent){
 
-      serverCall(crud);
-    }
-    updateStudentList(student);
-    clearAddStudentFormInputs();
+            serverCall(crud);
+      }else{
+      updateStudentList(student);
+      clearAddStudentFormInputs();
+      }
   }
   else{
       for(a in studentArray){
@@ -343,7 +349,7 @@ function serverCall(crud){
                   url:"http://localhost/studentGrade/php_sgt/data.php?action=insert",
                   method:'POST',
                   dataType:'json',
-                  data:`api_key=ToxPuUbzst&name=${crud.newstudent.name}&course=${crud.newstudent.course}&grade=${crud.newstudent.grade}`,
+                  data:`user=${crud.newstudent.user}&name=${crud.newstudent.name}&course=${crud.newstudent.course}&grade=${crud.newstudent.grade}`,
                         
                         
                   success:createStudent
@@ -398,7 +404,12 @@ function ajaxCall(dataPull){
    
       xhr.onload =function() {
         if (this.readyState == 4 && this.status == 200) {
-        return dataPull.success(JSON.parse(this.response));
+           if(this.response==""){
+            return;
+           }else{
+            return dataPull.success(JSON.parse(this.response));
+           }
+        
         }
       };
       xhr.open("POST", dataPull.url);
@@ -419,23 +430,30 @@ function dataCapture(response){
       
       response.data.map(student=>{
       
-           addStudent(student.name,student.course,student.grade,student.id,createStudent)
+           addStudent(student.user,student.name,student.course,student.grade,student.id,createStudent)
       });
      
      
 }
 
 function createStudent(response){
-
-const crud={crudName:"undefined"};
-
+      let crud;
+if(window.userLoggedIn){
+      crud={crudName:"userLoggedIn"};  
+}else{
+      crud={crudName:"undefined"};
+}
 serverCall(crud);
 }
 
 function deleteStudent(response){
-
-const crud={crudName:"undefined"};
-serverCall(crud);
+      let crud;
+      if(window.userLoggedIn){
+            crud={crudName:"userLoggedIn"};  
+      }else{
+            crud={crudName:"undefined"};
+      }
+      serverCall(crud);
 }
 
 /* Login and Signup Javascript*/
@@ -623,7 +641,8 @@ function emailAndPasswordVerification(loginOrSignup){
 }
 function loginPopUp (signUpRedirect){
 if(signUpRedirect){
- $(".loginHeader").text("Sign Up Successful, Login?").css("color","#3cb094");
+ 
+ $(".loginHeader").text("Sign Up Successful, Login?").addClass("SuccessTrue");
  $("#inputEmail").val(signUpRedirect.data);   
 }else{
  $(".loginHeader").text("Login").css("color","#000");
@@ -649,6 +668,7 @@ $(".loginEnter").on("click",function(){
 });
 }
 function loginForm(){
+      
       var loginData=emailAndPasswordVerification("login");
       if(loginData.validate){
      loginAjax(loginData);
@@ -667,17 +687,46 @@ function loginAjax(data){
             },
             dataType:'json',
             success : function(data) {
-                  console.log(data);              
+                  if(data.success){
+                  $(".loginHeader").removeClass("Error");
+                  $(".loginHeader").text("Successful Login!");
+                  $(".loginHeader").addClass("SuccessTrue animated tada");
+                  setTimeout(()=>{window.location.reload();},1000);
+                  }else if(!data.success){
+                   $(".loginHeader").text(data.invalid);
+                   $(".loginHeader").addClass("Error animated flash");
+                   setTimeout(()=>{$(".loginHeader").removeClass("animated flash");},1000);
+                  }              
                   
             },
             error : function(request,error)
             {
-                  loginRedirect();
                   console.log(request);
                   console.log(error);
             }
       });
 }
+function logout(){
+ $('.Logout').on("click",()=>{
+      $.ajax({
+      
+            url : 'http://localhost/studentGrade/php_sgt/data.php?action=logout',
+            type : 'POST',     
+            dataType:'json',
+            success : function(data) {
+                  if(data.success)
+                  window.location.reload();              
+                  
+            },
+            error : function(request,error)
+            {
+                  console.log("error");
+                  console.log(request);
+                  console.log(error);
+            }
+      });
+ });
+};
 
 
 
