@@ -1,6 +1,15 @@
 <!doctype html>
 <html>
 <head>
+<?php
+session_start();
+if(isset($_SESSION['user'])){
+    $userName=$_SESSION['user'];
+    echo"<script type=\"text/javascript\">
+    window.userLoggedIn='{$userName}';
+    </script>";
+}
+?>
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -16,6 +25,7 @@
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
+
 <div class="loginModal hide">
         
         <div class="loginPopUP login-form">

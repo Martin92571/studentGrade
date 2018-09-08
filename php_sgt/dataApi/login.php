@@ -1,2 +1,5 @@
 <?php
-var_dump($_POST);
+session_start();
+
+$email=$_POST['email'];
+$_SESSION['user']=$email;

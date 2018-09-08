@@ -31,7 +31,15 @@ let student_array=[];
 */
 function initializeApp(){
 addClickHandlersToElements();
-serverCall("serverCall");
+if(window.userLoggedIn){
+      let crud={crudName:"userLoggedIn"};
+      console.log("hitt");
+      serverCall(crud);
+      
+}else{
+      serverCall("serverCall");
+}
+
 login();
 signUp();
 }
@@ -355,6 +363,18 @@ function serverCall(crud){
       }
       ajaxCall(dataPull)
       break;
+      
+      case "userLoggedIn":
+      dataPull={
+            url:"http://localhost/studentGrade/php_sgt/data.php?action=userRead",
+            method:'POST',
+            dataType:'json',
+            data:"api_key=ToxPuUbzst",
+            success:dataCapture
+      }
+      ajaxCall(dataPull)
+      
+      break;
 
       default :
     
@@ -391,7 +411,8 @@ function ajaxCall(dataPull){
 
 
 function dataCapture(response){
-     
+      
+     if(!response.success){console.log(response);return};
       document.querySelector(".student-list>tbody").innerHTML="";
       student_array=[];
       const createStudent=false;
