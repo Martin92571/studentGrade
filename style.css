@@ -60,7 +60,7 @@
     text-align: center;
 }
 .error{
-    border-color:red;
+    border-color:red !important;
 }
 .col-md-offset-1{
     margin-left: 9.33333%;

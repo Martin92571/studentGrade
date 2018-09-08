@@ -11,7 +11,7 @@ if(isset($username) && isset($email) && isset($password)){
     $result=mysqli_query($conn,$sql);
    if(empty($result)){
        $output['error']=mysqli_error($conn);
-       $output['error'][]='email already in use';
+       $output['data']['email']='Email already in use';
    }else if(mysqli_affected_rows($conn)===1){
        $output['success']=true;
        $output['data']=$email;

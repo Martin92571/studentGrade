@@ -93,6 +93,7 @@ function getStudentFormValue(){
         return studentArray;
 }
 function addStudent(studentName,courseType,studentGrade,idNumber,createStudent){
+
   let studentArray=getStudentFormValue(); 
   if(studentName.trim()!="" && courseType.trim()!="" && studentGrade!="" && !isNaN(studentGrade)){
         
@@ -453,7 +454,9 @@ $(".loginRedirect").on("click",function(event){
 });
 $(".signUpBtn").on("click",()=>{
       var signUpData=signUpForm();
+      $(".emailError").text("");
       if(signUpData.validation){
+
      signupAjax(signUpData);
       }
    
@@ -467,7 +470,7 @@ var email=$(".email").val("")
 var password=$(".password").val("")
 var confirm_password=$(".confirm_password").val("");
 }
-function loginRedirect(){
+function loginRedirect(signupsucess){
 
 $(".signupPopUp").addClass("animated bounceOut");
 setTimeout(()=>{
@@ -477,7 +480,7 @@ setTimeout(()=>{
       $(".signUpBtn").off();
       clearForms();
 },700);
-setTimeout(()=>{loginPopUp()},1150);
+setTimeout(()=>{loginPopUp(signupsucess)},1150);
 }
 function signupAjax(data){
 data.password="tHodAoaSpp"+data.password+"627846";
@@ -491,13 +494,21 @@ $.ajax({
             'password':data.password
       },
       dataType:'json',
-      success : function(data) {
-            console.log(data);              
-            loginRedirect();
+      success : function(response) {
+            if(response.success){             
+            loginRedirect(response);
+            }else if(!response.success){
+                $(".emailError").text("- Already in use");
+                $(".emailError").addClass("animated flash");
+                setTimeout(()=>{
+                  $(".emailError").removeClass("animated flash");
+                },1200);
+                
+            }
       },
       error : function(request,error)
       {
-            loginRedirect();
+            
             console.log(request);
             console.log(error);
       }
@@ -506,7 +517,7 @@ $.ajax({
 function signUpForm(){
 
 
-var userCredentials=emailAndPasswordVerification("signUp");
+var userCredentials=emailAndPasswordVerification("signup");
 var validation=userCredentials.validate;
 var username=$(".username").val().trim();
 var confirm_password=$(".confirm_password").val().trim();
@@ -589,8 +600,14 @@ function emailAndPasswordVerification(loginOrSignup){
             return userCredentials={validate:credentialsValidation,email:email,password:password};
    }
 }
-function loginPopUp (){
-    
+function loginPopUp (signUpRedirect){
+if(signUpRedirect){
+ $(".loginHeader").text("Sign Up Successful, Login?").css("color","#3cb094");
+ $("#inputEmail").val(signUpRedirect.data);   
+}else{
+ $(".loginHeader").text("Login").css("color","#000");
+ $("#inputEmail").val(""); 
+}   
 $(".loginModal").removeClass("hide");
 $(".loginPopUP").addClass("animated bounceIn");
 setTimeout(()=>{$(".loginPopUP").removeClass("animated bounceIn")},1000);
