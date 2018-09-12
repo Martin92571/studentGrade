@@ -11,7 +11,7 @@ if(isset($_SESSION['user'])){
     window.userLoggedIn='{$userName}';
     </script>";
 }
-?>
+?> 
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -22,8 +22,29 @@ if(isset($_SESSION['user'])){
     
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="animate.css">
-    <link rel="stylesheet" href="style.css"> 
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript">
+      /* Sample function that returns boolean in case the browser is Internet Explorer*/
+function isIE() {
+  ua = navigator.userAgent;
+  /* MSIE used to detect old browsers and Trident used to newer ones*/
+  var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+  
+  if (is_ie){
+    var es5 = document.createElement("script");
+    es5.type = "text/javascript";
+    es5.src = "scriptEs5.js";
+    $("head").append(es5);
+   }else{
+    var es6 = document.createElement("script");
+    es6.type = "text/javascript";
+    es6.src = "script.js";
+    $("head").append(es6);
+   };
+}
+  isIE();
+</script> 
+    
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
