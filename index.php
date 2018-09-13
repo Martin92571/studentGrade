@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Cache-control" content="no-cache">
 <meta http-equiv="Expires" content="-1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <?php
 session_start();
 if(isset($_SESSION['user'])){
