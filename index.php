@@ -1,52 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Cache-control" content="no-cache">
 <meta http-equiv="Expires" content="-1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<?php
-session_start();
-if(isset($_SESSION['user'])){
-    $userName=$_SESSION['user'];
-    echo"<script type=\"text/javascript\">
-    window.userLoggedIn='{$userName}';
-    </script>";
-}
-?> 
-    <script
+<script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="animate.css">
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript">
-      /* Sample function that returns boolean in case the browser is Internet Explorer*/
-function isIE() {
-  ua = navigator.userAgent;
-  /* MSIE used to detect old browsers and Trident used to newer ones*/
-  var is_ie = ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
-  
-  if (is_ie){
-    var es5 = document.createElement("script");
-    es5.type = "text/javascript";
-    es5.src = "scriptEs5.js";
-    $("head").append(es5);
-   }else{
-    var es6 = document.createElement("script");
-    es6.type = "text/javascript";
-    es6.src = "script.js";
-    $("head").append(es6);
-   };
-}
-  isIE();
-</script> 
-    
-    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+
+<?php
+require './php_sgt/user.php';
+?>  
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="animate.css">
+<link rel="stylesheet" href="style.css">
+<?php
+
+echo "<script type=\"text/javascript\">
+    /* Sample function that returns boolean in case the browser is Internet Explorer*/
+    function isIE() {
+    ua = navigator.userAgent;
+    /* MSIE used to detect old browsers and Trident used to newer ones*/
+    var is_ie = ua.indexOf(\"MSIE \") > -1 || ua.indexOf(\"Trident/\") > -1;
+    if (is_ie){
+        
+        var es5 = document.createElement(\"script\");
+        es5.type = \"text/javascript\";
+        es5.src = \"scriptEs5.js\";
+        $(\"head\").append(es5);
+    }else{
+        var es6 = document.createElement(\"script\");
+        es6.type = \"text/javascript\";
+        es6.src = \"script.js\";
+        $(\"head\").append(es6);
+    };
+    }
+    isIE();
+        </script>";
+        ?>
+
+<meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
 
@@ -104,7 +102,7 @@ function isIE() {
                 <input type="password" class="form-control password" name="password" required="required">
             </div>
             <div class="form-group">
-                <label>Confirm Password <span class="Error confirm_passwordError"></span></span></label>
+                <label>Confirm Password <span class="Error confirm_passwordError"></span></label>
                 <input type="password" class="form-control confirm_password" name="confirm_password" required="required">
             </div>
             <div class="form-group">

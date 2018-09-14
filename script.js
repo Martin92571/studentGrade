@@ -5,6 +5,8 @@
 /**
  * Listen for the document to load and initialize the application
  */
+
+
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 /**
@@ -31,7 +33,7 @@ let student_array=[];
 */
 function initializeApp(){
 addClickHandlersToElements();
-if(window.userLoggedIn){
+if(__user){
       let crud={crudName:"userLoggedIn"};
       serverCall(crud);
       
@@ -67,8 +69,8 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(event){
       let user;
-      if(window.userLoggedIn){
-          user=window.userLoggedIn;
+      if(__user){
+          user=__user;
       }else{
             user="default"
       }
@@ -438,7 +440,7 @@ function dataCapture(response){
 
 function createStudent(response){
       let crud;
-if(window.userLoggedIn){
+if(__user){
       crud={crudName:"userLoggedIn"};  
 }else{
       crud={crudName:"undefined"};
@@ -448,7 +450,7 @@ serverCall(crud);
 
 function deleteStudent(response){
       let crud;
-      if(window.userLoggedIn){
+      if(__user){
             crud={crudName:"userLoggedIn"};  
       }else{
             crud={crudName:"undefined"};
