@@ -183,7 +183,8 @@ echo "<script type=\"text/javascript\">
     <div class="">
         <!-- only show this element when it isnt on mobile -->
         <h1 class="hidden-xs hidden-sm page-header ">Student Grade Table
-            <?php 
+            <?php
+            
             if(isset($_SESSION['user'])){
                echo "<button type=\"button\" class=\" Logout col-md-offset-6 btn btn-primary\">Logout</button>";
             }else{
@@ -196,8 +197,16 @@ echo "<script type=\"text/javascript\">
         
         <!-- only show this element when the user gets to a mobile version -->
         <h3 class="visible-xs visible-sm col-xs-12 page-header ">Student Grade Table
-                <button type="button" class="login userBtn col-xs-offset-3 btn btn-primary">Login</button>
-                <button type="button" class="signUp userBtn  btn btn-success">Sign Up</button>
+              <?php
+              
+              if(isset($_SESSION['user'])){
+                echo "<button type=\"button\" class=\"Logout userBtn col-xs-offset-6 btn btn-primary\">Login</button>";
+               }else{
+                echo "<button type=\"button\" class=\"login userBtn col-xs-offset-3 btn btn-primary\">Login</button>
+                <button type=\"button\" class=\"signUp userBtn  btn btn-success\">Sign Up</button>";
+               }
+               ?>
+                
             <small class="visible-xs visible-sm col-xs-12">Grade Average : <span class="avgGrade label label-default">0</span></small>
         </h3>
     </div>
