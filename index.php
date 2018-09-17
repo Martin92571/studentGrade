@@ -200,7 +200,7 @@ echo "<script type=\"text/javascript\">
               <?php
               
               if(isset($_SESSION['user'])){
-                echo "<button type=\"button\" class=\"Logout userBtn col-xs-offset-6 btn btn-primary\">Login</button>";
+                echo "<button type=\"button\" class=\"Logout userBtn col-xs-offset-6 btn btn-primary\">Logout</button>";
                }else{
                 echo "<button type=\"button\" class=\"login userBtn col-xs-offset-3 btn btn-primary\">Login</button>
                 <button type=\"button\" class=\"signUp userBtn  btn btn-success\">Sign Up</button>";
